@@ -1,0 +1,121 @@
+ import React,{useState,useEffect} from 'react';
+import Pagina1 from './Componentes/Pagina1';
+import Pagina2 from './Componentes/Pagina2'; 
+ 
+import './App.css'; 
+function App() {
+
+  const [pagina,setPagina]=useState() 
+ //verificar o parâmetro que vem da url e decidir qual elemento que será retornado 
+  useEffect(
+    ()=>{ 
+      const url = window.location.href;
+      const res = url.split('?');
+      setPagina(res[1]);
+      console.log("useEfect")
+    }
+  ) 
+
+   //função de troca de páginas 
+   //definição de parâmetro
+   const LinksPaginas=(p)=>{ 
+
+      if(p=='1'){
+        //passagem de parâmetro com '?'
+        window.open('http://localhost:3000?1','self')
+      }else if(p=='2'){
+        window.open('http://localhost:3000?2','self')
+      } 
+  }
+
+  const Hello=()=>{  
+     console.log("BOM")
+}
+
+
+//função para definir a url: Retornar a pág
+//state 1,2,3
+  const retornarPagina=()=>{ 
+
+      if(pagina==1){ 
+        return  <Pagina1/> 
+      }else if(pagina==2){ 
+        return  <Pagina2/> 
+      }else{
+        return  <div> 
+                  <button onClick={()=>LinksPaginas(1)}>Página 1</button> 
+                  <button onClick={()=>LinksPaginas(2)}>Página 2</button> 
+                   
+                </div> 
+      }
+  }
+//**************************************************************** */
+  const carros =[
+    {categoria:"Esporte",preco:"110000", modelo:"Golf GTI"},
+    {categoria:"Esporte",preco:"5000", modelo:"Opala"},
+    {categoria:"SUV",preco:"110000", modelo:"HRV"},
+    {categoria:"SUV",preco:"110000", modelo:"T-CROSS"},
+    {categoria:"Utilitario",preco:"200000", modelo:"Hillux"},
+    {categoria:"Utilitario",preco:"150000", modelo:"Range"},
+      
+  ]
+//vai percorrer carro
+//testar se é da mesma categoria
+//se for igual ele retorna a elementos dessa categoria
+  const linhas=(cat)=>{ 
+    const li=[]
+    carros.forEach(
+      (carro)=>{
+        if(carro.categoria.toUpperCase()==cat.toUpperCase() || cat.toUpperCase() ==''){
+          li.push(
+            <tr>
+              <td>{carro.categoria}</td>
+              <td>{carro.preco}</td>
+              <td>{carro.modelo}</td>
+            </tr>
+          )
+        }
+      }
+    )
+    return li
+
+  }
+ //carregar a tabela
+ //Parametros: categoria 
+ //É preciso interação: State
+  const TabelaCarros=(cat)=>{
+    return(
+      <table border='1' style={{borderCollapse:'collapse'}}>
+        <thead>
+          <tr>
+            <th>Categoria</th><th>Preco</th><th>Modelo</th>
+          </tr>
+        </thead>
+        <tbody>
+        {/*É PRECISO DE UMA FINÇÃO PARA RETORNAR AS LINHAS*/}
+          {linhas(cat)}
+        </tbody>
+      </table>
+    )
+  }
+  const pesquisaCategoria=(cat,scat)=>{
+    return(
+      <div>
+        <label>Digite uma categoria</label>
+        <input type="text" value={cat} onChange={(e)=>scat(e.target.value)}/> 
+      </div>
+    )
+  }
+  const [categoria,setCategoria]=useState('')
+  return (
+  <>
+    {/*retornarPagina()*/}
+    {pesquisaCategoria(categoria,setCategoria)}
+   <br></br>
+   {TabelaCarros(categoria)}
+  </>
+  );
+}
+
+export default App;
+
